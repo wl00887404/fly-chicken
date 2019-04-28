@@ -1,5 +1,5 @@
 import random from "lodash/random";
-import { deg } from "./const";
+import deg from "./deg";
 
 const sign = () => (random(0, 1) ? -1 : 1);
 

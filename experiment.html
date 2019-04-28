@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Experiment</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <script>
+      const src =
+        "https://s3-ap-northeast-1.amazonaws.com/wl00887404/chickenLeg.svg";
+
+      const tenThousandTimes = (tag, callback) => {
+        console.time(tag);
+        for (let i = 0; i < 10000; i++) {
+          callback();
+        }
+        console.timeEnd(tag);
+      };
+
+      const main = async () => {
+        const img = new Image();
+        img.src = src;
+        await new Promise(resolve => (img.onload = resolve));
+
+        const ctx = canvas.getContext("2d");
+
+        const cImg300 = document.createElement("canvas");
+        cImg300.width = 300;
+        cImg300.height = 300;
+        cImg300.getContext("2d").drawImage(img, 0, 0);
+
+        const cImg500 = document.createElement("canvas");
+        cImg500.width = 500;
+        cImg500.height = 500;
+        cImg500.getContext("2d").drawImage(img, 0, 0);
+
+        ctx.clearRect(0, 0, 500, 500);
+        tenThousandTimes("畫 svg", () => {
+          ctx.drawImage(img, 0, 0);
+        });
+
+        ctx.clearRect(0, 0, 500, 500);
+        tenThousandTimes("畫 svg | 調整 size", () => {
+          ctx.drawImage(img, 0, 0, 300, 300);
+        });
+
+        ctx.clearRect(0, 0, 500, 500);
+        tenThousandTimes("畫 canvas500", () => {
+          ctx.drawImage(cImg500, 0, 0);
+        });
+
+        ctx.clearRect(0, 0, 500, 500);
+        tenThousandTimes("畫 canvas300", () => {
+          ctx.drawImage(cImg300, 0, 0);
+        });
+
+        ctx.clearRect(0, 0, 500, 500);
+        tenThousandTimes("畫 canvas500 | 調整 size ", () => {
+          ctx.drawImage(cImg500, 0, 0, 300, 300);
+        });
+      };
+      main();
+    </script>
+  </body>
+</html>
